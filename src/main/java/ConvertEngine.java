@@ -1,6 +1,8 @@
 import com.sun.javafx.binding.StringFormatter;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -10,8 +12,9 @@ public class ConvertEngine {
     private String[] toReturn;
     private Pattern pattern;
     private Matcher matcher;
-    String string;
+    private String string;
     private Map<String, Integer> amountOfProducts = new LinkedHashMap<>();
+    private List<String> prices;
     private Map<String, Integer> amountOfPrices = new LinkedHashMap<>();
     private String regexMilk = "[mM][iI][lL][kK]";
     private String regexBread = "[bB][rR][eE][aA][dD]";
@@ -50,6 +53,7 @@ public class ConvertEngine {
     }
 
     public void mapMilk() {
+        prices = new ArrayList<>();
         string = arrayToString(toReturn);
         pattern = Pattern.compile(regexMilk);
         matcher = pattern.matcher(string);
