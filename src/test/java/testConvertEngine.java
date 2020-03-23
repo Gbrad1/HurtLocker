@@ -14,26 +14,25 @@ public class testConvertEngine {
     }
 
     @Test
-    public void testConvertToPair() {
-        ce.convertIntoPairs(data);
-        Assert.assertEquals(28, ce.getSize());
+    public void testSplitString() {
+        ce.splitString(data);
+        Assert.assertEquals(251, ce.getSize());
     }
 
     @Test
     public void testPrintOutStrings() {
-        ce.convertIntoPairs(data);
-        ce.printArrayOfStrings();
+        ce.printArrayOfStrings(ce.splitString(data));
     }
 
     @Test
     public void testGetSize() {
-        ce.convertIntoPairs(data);
-        Assert.assertEquals(28, ce.getSize());
+        ce.splitString(data);
+        Assert.assertEquals(251, ce.getSize());
     }
 
     @Test
     public void testMapMilk() {
-        ce.executeMasterCommand(data);
+        ce.splitString(data);
         ce.mapMilk();
         int actualAmountOfMilk = ce.getAmountOfProducts().get("Milk");
         Assert.assertTrue(ce.getAmountOfProducts().containsKey("Milk"));
@@ -42,7 +41,7 @@ public class testConvertEngine {
 
     @Test
     public void testMapBread() {
-        ce.executeMasterCommand(data);
+        ce.splitString(data);
         ce.mapBread();
         int actualAmountOfBread = ce.getAmountOfProducts().get("Bread");
         Assert.assertTrue(ce.getAmountOfProducts().containsKey("Bread"));
@@ -51,7 +50,7 @@ public class testConvertEngine {
 
     @Test
     public void testMapCookies() {
-        ce.executeMasterCommand(data);
+        ce.splitString(data);
         ce.mapCookies();
         int actualAmountOfCookies = ce.getAmountOfProducts().get("Cookies");
         Assert.assertTrue(ce.getAmountOfProducts().containsKey("Cookies"));
@@ -60,7 +59,7 @@ public class testConvertEngine {
 
     @Test
     public void testMapApples() {
-        ce.executeMasterCommand(data);
+        ce.splitString(data);
         ce.mapApples();
         int actualAmountOfApples = ce.getAmountOfProducts().get("Apples");
         Assert.assertTrue(ce.getAmountOfProducts().containsKey("Apples"));
@@ -85,6 +84,61 @@ public class testConvertEngine {
         Assert.assertTrue(ce.getAmountOfProducts().containsKey("Milk"));
         Assert.assertEquals(8, actualAmountOfMilk);
 
+    }
+
+    @Test
+    public void testGetAppleFirstPrice() {
+        ce.executeMasterCommand(data);
+        ce.getFirstApplePrice();
+        int actualAmountOfFirstApplePrices = ce.getAmountOfPrices().get("0.25");
+        Assert.assertTrue(ce.getAmountOfPrices().containsKey("0.25"));
+        Assert.assertEquals(2, actualAmountOfFirstApplePrices);
+    }
+
+    @Test
+    public void testGetAppleSecondPrice() {
+        ce.executeMasterCommand(data);
+        ce.getSecondApplePrice();
+        int actualAmountOfSecondApplePrices = ce.getAmountOfPrices().get("0.23");
+        Assert.assertTrue(ce.getAmountOfPrices().containsKey("0.23"));
+        Assert.assertEquals(2, actualAmountOfSecondApplePrices);
+    }
+
+    @Test
+    public void testGetBreadPrice() {
+        ce.executeMasterCommand(data);
+        ce.getBreadPrice();
+        int actualamountOfBreadPrices = ce.getAmountOfPrices().get("1.23");
+        Assert.assertTrue(ce.getAmountOfPrices().containsKey("1.23"));
+        Assert.assertEquals(7, actualamountOfBreadPrices);
+    }
+
+    @Test
+    public void testGetCookiesPrice() {
+        ce.executeMasterCommand(data);
+        ce.getCookiesPrice();
+        int actualAmountOfCookiePrices = ce.getAmountOfPrices().get("2.25");
+        Assert.assertTrue(ce.getAmountOfPrices().containsKey("2.25"));
+        Assert.assertEquals(8, actualAmountOfCookiePrices);
+    }
+
+
+    @Test
+    public void testGetMilkFirstPrice() {
+        ce.executeMasterCommand(data);
+        ce.getMilkFirstPrice();
+        int actualAmountOfMilkFirstPrices = ce.getAmountOfPrices().get("1.23");
+        Assert.assertTrue(ce.getAmountOfPrices().containsKey("1.23"));
+        Assert.assertEquals(7, actualAmountOfMilkFirstPrices);
+    }
+
+    @Test
+    public void testGetMilkSecondPrice() {
+        ce.executeMasterCommand(data);
+        ce.getMilkSecondPrice();
+        int actualamountOfSecondMilkPrices = ce.getAmountOfPrices().get("3.23");
+        Assert.assertTrue(ce.getAmountOfPrices().containsKey("3.23"));
+        Assert.assertEquals(7, actualamountOfSecondMilkPrices);
     }
 
 }
