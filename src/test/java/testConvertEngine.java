@@ -141,4 +141,10 @@ public class testConvertEngine {
         Assert.assertEquals(7, actualamountOfSecondMilkPrices);
     }
 
+    @Test
+    public void testToString() {
+        ce.executeMasterCommand(data);
+        ce.toString();
+    }
+
 }

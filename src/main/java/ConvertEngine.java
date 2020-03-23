@@ -189,8 +189,19 @@ public class ConvertEngine {
 
     @Override
     public String toString() {
-        String string = String.format("name:    %s", product);
-        String toReturn = "name: ";
+        String string = "name: %7s    seen: %1s times\n=============    =============\n";
+        String string1 = "Price: %7s    seen: %1s times\n-------------    -------------\n";
 
+        String toReturn = "";
+        for (Map.Entry<String, Integer> element : amountOfProducts.entrySet()) {
+            toReturn += String.format(string, element.getKey(), element.getValue());
+            for (Map.Entry<String, Integer> price : amountOfPrices.entrySet()) {
+                if (element.getKey().equals("Milk")) {
+                    toReturn += String.format(string1, price.getKey(), price.getValue());
+                }
+            }
+        }
+        System.out.println(toReturn);
+        return toReturn;
     }
 }
