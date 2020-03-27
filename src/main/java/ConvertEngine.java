@@ -1,5 +1,3 @@
-import com.sun.javafx.binding.StringFormatter;
-
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,13 +7,19 @@ import java.util.regex.Pattern;
 
 public class ConvertEngine {
 
-    private String[] toReturn;
-    private Pattern pattern;
-    private Matcher matcher;
+    private String[] arr;
+    private Pattern patternMilk;
+    private Pattern patternApple;
+    private Pattern patternBread;
+    private Pattern patternCookie;
+    private Matcher matcherMilk;
+    private Matcher matcherApple;
+    private Matcher matcherBread;
+    private Matcher matcherCookie;
+    private Produce tempProduce;
     private String string;
-    private Map<String, Integer> amountOfProducts = new LinkedHashMap<>();
-    private List<String> prices;
-    private Map<String, Integer> amountOfPrices = new LinkedHashMap<>();
+    private Map<String, LinkedHashMap<String, Integer>> amountOfProducts = new LinkedHashMap<>();
+    List<Produce> listOfProduce = new ArrayList<>();
     private String regexMilk = "[mM][iI][lL][kK]";
     private String regexBread = "[bB][rR][eE][aA][dD]";
     private String regexCookie = "[cC][oO0][oO0][kK][iI][eE][sS]";
@@ -25,8 +29,7 @@ public class ConvertEngine {
 
     public void executeMasterCommand(String data) {
         splitString(data);
-        mapAllFood();
-        mapAllPrices();
+        generateProduce(arr);
     }
 
     public void printArrayOfStrings(String[] array) {
@@ -36,159 +39,93 @@ public class ConvertEngine {
     }
 
     public int getSize() {
-        return toReturn.length;
+        return arr.length;
     }
 
     public String[] splitString(String string) {
-        toReturn = string.split("[!@#$%^&*(),?\":;{}|<>]");
+        arr = string.split("##");
+        return arr;
+    }
+
+    public String printProduce(List<Produce> list) {
+        String toReturn = "";
+        for (Produce element : list) {
+            toReturn += element.toString();
+            toReturn += "\n";
+        }
+        System.out.println(toReturn);
         return toReturn;
     }
 
-    public String arrayToString(String[] array) {
-        String string = "";
-        for (String element : array) {
-            string += element += " ";
+    public List<Produce> generateProduce(String[] arr) {
+        for (int i = 0; i < arr.length; i++) {
+            Produce foodToAdd = findProduceName(arr[i]);
+            foodToAdd.setPrice(findProducePrice(arr[i]));
+            listOfProduce.add(tempProduce);
         }
-        return string;
+        return listOfProduce;
     }
 
-    public void mapMilk() {
-        prices = new ArrayList<>();
-        string = arrayToString(toReturn);
-        pattern = Pattern.compile(regexMilk);
-        matcher = pattern.matcher(string);
-        int count = 0;
-        for (int i = 0; i < toReturn.length; i++) {
-            if (matcher.find()) {
-                count++;
+    public Produce findProduceName(String string) {
+        patternMilk = Pattern.compile(regexMilk);
+        patternApple = Pattern.compile(regexApple);
+        patternBread = Pattern.compile(regexBread);
+        patternCookie = Pattern.compile(regexCookie);
+        matcherMilk = patternMilk.matcher(string);
+        matcherApple = patternApple.matcher(string);
+        matcherBread = patternBread.matcher(string);
+        matcherCookie = patternCookie.matcher(string);
+
+        if (matcherMilk.find()) {
+            tempProduce = new Produce("Milk", null);
+        }
+
+        if (matcherApple.find()) {
+            tempProduce = new Produce("Apple", null);
+        }
+
+        if (matcherBread.find()) {
+            tempProduce = new Produce("Bread", null);
+        }
+
+        if (matcherCookie.find()) {
+            tempProduce = new Produce("Cookie", null);
+        }
+
+        return tempProduce;
+    }
+
+    public String findProducePrice(String string) {
+        String[] info = string.split("[!@#$%^&*(),?:;{}|<>]");
+        return info[3];
+    }
+
+    public void mapProduceAndPrice() {
+        for (int i = 0; i < listOfProduce.size(); i++) {
+            if (!amountOfProducts.containsKey(listOfProduce.get(i).getName())) {
+                LinkedHashMap<String, Integer> prices = new LinkedHashMap<>();
+                checkIfPriceExistsYet(prices, i);
+                amountOfProducts.put(listOfProduce.get(i).getName(), prices);
+            } else {
+                checkIfPriceExistsYet(amountOfProducts.get(listOfProduce.get(i).getName()), i);
             }
         }
-        amountOfProducts.put("Milk", count);
     }
 
-    public void mapBread() {
-        string = arrayToString(toReturn);
-        pattern = Pattern.compile(regexBread);
-        matcher = pattern.matcher(string);
-        int count = 0;
-        for (int i = 0; i < toReturn.length; i++) {
-            if (matcher.find()) {
-                count++;
-            }
+    public void checkIfPriceExistsYet(LinkedHashMap<String, Integer> map, int index) {
+        if (!map.containsKey(listOfProduce.get(index).getPrice())) {
+            map.put(listOfProduce.get(index).getPrice(), 1);
+        } else {
+            map.put(listOfProduce.get(index).getPrice(), map.get(listOfProduce.get(index).getPrice() + 1));
         }
-        amountOfProducts.put("Bread", count);
     }
 
-    public void mapCookies() {
-        string = arrayToString(toReturn);
-        pattern = Pattern.compile(regexCookie);
-        matcher = pattern.matcher(string);
-        int count = 0;
-        for (int i = 0; i < toReturn.length; i++) {
-            if (matcher.find()) {
-                count++;
-            }
-        }
-        amountOfProducts.put("Cookies", count);
-    }
-
-    public void mapApples() {
-        string = arrayToString(toReturn);
-        pattern = Pattern.compile(regexApple);
-        matcher = pattern.matcher(string);
-        int count = 0;
-        for (int i = 0; i < toReturn.length; i++) {
-            if (matcher.find()) {
-                count++;
-            }
-        }
-        amountOfProducts.put("Apples", count);
-    }
-
-    public void getFirstApplePrice() {
-        int count = 0;
-        for (int i = 0; i < toReturn.length; i++) {
-            if(toReturn[i].equals("0.25")) {
-                count++;
-            }
-        }
-        amountOfPrices.put("0.25", count);
-    }
-
-    public void getSecondApplePrice() {
-        int count = 0;
-        for (int i = 0; i < toReturn.length; i++) {
-            if(toReturn[i].equals("0.23")) {
-                count++;
-            }
-        }
-        amountOfPrices.put("0.23", count);
-    }
-
-    public void getBreadPrice() {
-        int count = 0;
-        for (int i = 0; i < toReturn.length; i++) {
-            if(toReturn[i].equals("1.23")) {
-                count++;
-            }
-        }
-        amountOfPrices.put("1.23", count);
-    }
-
-    public void getCookiesPrice() {
-        int count = 0;
-        for (int i = 0; i < toReturn.length; i++) {
-            if(toReturn[i].equals("2.25")) {
-                count++;
-            }
-        }
-        amountOfPrices.put("2.25", count);
-    }
-
-    public void getMilkFirstPrice() {
-        int count = 0;
-        for (int i = 0; i < toReturn.length; i++) {
-            if(toReturn[i].equals("1.23")) {
-                count++;
-            }
-        }
-        amountOfPrices.put("1.23", count);
-    }
-
-    public void getMilkSecondPrice() {
-        int count = 0;
-        for (int i = 0; i < toReturn.length; i++) {
-            if(toReturn[i].equals("3.23")) {
-                count++;
-            }
-        }
-        amountOfPrices.put("3.23", count);
-    }
-
-
-    public void mapAllPrices() {
-        getFirstApplePrice();
-        getSecondApplePrice();
-        getBreadPrice();
-        getCookiesPrice();
-        getMilkFirstPrice();
-        getMilkSecondPrice();
-    }
-
-    public void mapAllFood() {
-        mapMilk();
-        mapBread();
-        mapCookies();
-        mapApples();
-    }
-
-
-    public Map<String, Integer> getAmountOfProducts() {
+    public Map<String, LinkedHashMap<String, Integer>> getAmountOfProducts() {
         return amountOfProducts;
     }
 
-    public Map<String, Integer> getAmountOfPrices() {
-        return amountOfPrices;
+    public List<Produce> getListOfProduce() {
+        return listOfProduce;
     }
 
     @Override
@@ -197,14 +134,10 @@ public class ConvertEngine {
         String string1 = "Price: %7s    seen: %1s times\n-------------    -------------\n";
 
         String toReturn = "";
-        for (Map.Entry<String, Integer> element : amountOfProducts.entrySet()) {
+        for (Map.Entry<String, LinkedHashMap<String, Integer>> element : amountOfProducts.entrySet()) {
             toReturn += String.format(string, element.getKey(), element.getValue());
-            for (Map.Entry<String, Integer> price : amountOfPrices.entrySet()) {
-                if (element.getKey().equals("Milk")) {
-                    toReturn += String.format(string1, price.getKey(), price.getValue());
-                }
+
             }
-        }
         System.out.println(toReturn);
         return toReturn;
     }
