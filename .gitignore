@@ -8,6 +8,9 @@
 .idea/*
 
 target/*
+target
+.class
+output.txt
 
 *.iml
 # Sensitive or high-churn files:
